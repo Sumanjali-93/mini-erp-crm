@@ -150,12 +150,12 @@ npm start
 
 ## ✨ Key Features at a Glance
 
-- ✅ Role-based dashboards (4 distinct roles, server-enforced permissions)
-- ✅ Concurrency-safe inventory using row-level DB locks
-- ✅ Point-in-time invoice snapshots (immutable historical records)
-- ✅ Auto low-stock alerts
-- ✅ Client-side PDF invoice generation
-- ✅ Fully responsive glassmorphic UI
+- Role-based dashboards (4 distinct roles, server-enforced permissions)
+- Concurrency-safe inventory using row-level DB locks
+- Point-in-time invoice snapshots (immutable historical records)
+- Auto low-stock alerts
+- Client-side PDF invoice generation
+- Fully responsive glassmorphic UI
 
 ---
 
