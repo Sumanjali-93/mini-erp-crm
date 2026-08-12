@@ -15,16 +15,24 @@ const {
 let pool;
 
 export async function initDatabase() {
-  const connection = await mysql.createConnection({
-    host: DB_HOST || 'localhost',
-    port: Number(DB_PORT) || 3306,
-    user: DB_USER || 'root',
-    password: DB_PASSWORD || 'password'
-  });
+  const dbName = DB_NAME;
 
-  const dbName = DB_NAME || 'mini_erp_crm';
-  await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
-  await connection.end();
+pool = mysql.createPool({
+  host: DB_HOST,
+  port: Number(DB_PORT),
+  user: DB_USER,
+  password: DB_PASSWORD,
+  database: dbName,
+
+  ssl: {
+    minVersion: "TLSv1.2",
+    rejectUnauthorized: true
+  },
+
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
 
   pool = mysql.createPool({
     host: DB_HOST || 'localhost',
@@ -32,6 +40,10 @@ export async function initDatabase() {
     user: DB_USER || 'root',
     password: DB_PASSWORD || 'password',
     database: dbName,
+      ssl: {
+    minVersion: "TLSv1.2",
+    rejectUnauthorized: false
+  },
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -174,8 +186,6 @@ async function seedData() {
     }
     console.log('Users seeded successfully!');
   }
-
-  // Seed sample products if empty
   const [pRows] = await pool.query('SELECT COUNT(*) as count FROM products');
   const pCount = pRows[0].count;
   if (pCount === 0) {
@@ -202,8 +212,6 @@ async function seedData() {
     }
     console.log('Sample products seeded!');
   }
-
-  // Seed sample customers if empty
   const [cRows] = await pool.query('SELECT COUNT(*) as count FROM customers');
   const cCount = cRows[0].count;
   if (cCount === 0) {
