@@ -2,12 +2,15 @@
 
 A complete, responsive, full-stack **ERP + CRM** system built for wholesale/distribution businesses — covering customer relationship management, inventory tracking, and sales invoicing in one unified dashboard.
 
+🔗 **Repo:** [github.com/Sumanjali-93/mini-erp-crm](https://github.com/Sumanjali-93/mini-erp-crm)
+
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-Auth-black?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
 **Tags:** `full-stack` `erp` `crm` `inventory-management` `sales-invoicing` `mysql` `express-js` `react-js` `jwt-authentication` `role-based-access-control` `rest-api` `transactional-sql` `pdf-generation` `responsive-design` `node-js` `mern-style-stack`
 
@@ -24,33 +27,45 @@ It's designed to demonstrate **production-grade patterns**: role-based auth, tra
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ High-Level Architecture
 
+```mermaid
+flowchart TB
+    U["👤 Users<br/><sub>Admin · Sales · Warehouse · Accounts</sub>"]
+
+    subgraph CLIENT["💻 Client — React"]
+        C1["Glassmorphic Dashboard<br/><sub>Role-based UI rendering</sub>"]
+        C2["PDF Export<br/><sub>jsPDF + jsPDF-AutoTable</sub>"]
+    end
+
+    subgraph SERVER["🖥️ Server — Node.js + Express"]
+        S1["Auth & RBAC Middleware<br/><sub>JWT verification, role guards</sub>"]
+        S2["Business Logic<br/><sub>Stock row-locks, invoice snapshots</sub>"]
+    end
+
+    subgraph DB["🗄️ Database — MySQL"]
+        D1["users"]
+        D2["customers + followups"]
+        D3["products + stock_movements"]
+        D4["challans + line snapshots"]
+    end
+
+    U -- "JWT login" --> CLIENT
+    CLIENT -- "REST API, Bearer token" --> SERVER
+    S1 --> S2
+    SERVER -- "SQL, FOR UPDATE locks" --> DB
+
+    classDef userStyle fill:#EEEDFE,stroke:#534AB7,color:#26215C
+    classDef clientStyle fill:#E6F1FB,stroke:#185FA5,color:#042C53
+    classDef serverStyle fill:#E1F5EE,stroke:#0F6E56,color:#04342C
+    classDef dbStyle fill:#EAF3DE,stroke:#3B6D11,color:#173404
+    class U userStyle
+    class CLIENT,C1,C2 clientStyle
+    class SERVER,S1,S2 serverStyle
+    class DB,D1,D2,D3,D4 dbStyle
 ```
-┌─────────────────────────────┐
-│        CLIENT (React)       │
-│  • Glassmorphic Dashboard   │
-│  • Role-based UI rendering  │
-│  • PDF export (jsPDF)       │
-│  • Confetti on success      │
-└───────────────┬─────────────┘
-                │  REST API (JWT Bearer Auth)
-┌───────────────▼─────────────┐
-│     SERVER (Node + Express) │
-│  • JWT auth & RBAC middleware│
-│  • Transactional stock logic│
-│    (MySQL FOR UPDATE locks) │
-│  • Invoice item snapshotting│
-└───────────────┬─────────────┘
-                │  SQL
-┌───────────────▼─────────────┐
-│        DATABASE (MySQL)     │
-│  • users                    │
-│  • customers + followups    │
-│  • products + stock_moves   │
-│  • challans + line snapshots│
-└──────────────────────────────┘
-```
+
+**Flow:** Users authenticate into the React client → client calls the Express REST API with a JWT Bearer token → the server's Auth/RBAC layer validates the role, then hands off to business logic (stock locking, invoice snapshotting) → server persists to MySQL using row-level locks so concurrent sales never oversell inventory.
 
 **Design highlights:**
 | Concern | How it's handled |
@@ -75,24 +90,40 @@ It's designed to demonstrate **production-grade patterns**: role-based auth, tra
 
 ---
 
+## 📁 Project Structure
+
+```
+mini-erp-crm/
+├── backend/          # Node.js + Express REST API, JWT auth, MySQL models
+├── frontend/          # React client — dashboard, CRM, inventory, invoicing UI
+└── README.md
+```
+
 ## ⚙️ Getting Started
 
 ### Prerequisites
-- Node.js installed
+- [Node.js](https://nodejs.org/) installed
 - A local MySQL instance running on `localhost:3306`
 
-### Setup
-1. Ensure MySQL is running — **no manual DB setup needed.**
-2. On first run, the server automatically:
-   - Creates the `mini_erp_crm` database
-   - Builds all required tables
-   - Seeds default role-based accounts and sample inventory
+### Installation
 
 ```bash
-# install dependencies for both client & server, then run
+# 1. Clone the repo
+git clone https://github.com/Sumanjali-93/mini-erp-crm.git
+cd mini-erp-crm
+
+# 2. Install & run the backend
+cd backend
+npm install
+npm start
+
+# 3. In a new terminal, install & run the frontend
+cd frontend
 npm install
 npm start
 ```
+
+> On first run, the backend automatically creates the `mini_erp_crm` database, builds all required tables, and seeds default role-based accounts and sample inventory — **no manual DB setup needed.**
 
 ---
 
@@ -150,12 +181,12 @@ npm start
 
 ## ✨ Key Features at a Glance
 
-- Role-based dashboards (4 distinct roles, server-enforced permissions)
-- Concurrency-safe inventory using row-level DB locks
-- Point-in-time invoice snapshots (immutable historical records)
-- Auto low-stock alerts
-- Client-side PDF invoice generation
-- Fully responsive glassmorphic UI
+- ✅ Role-based dashboards (4 distinct roles, server-enforced permissions)
+- ✅ Concurrency-safe inventory using row-level DB locks
+- ✅ Point-in-time invoice snapshots (immutable historical records)
+- ✅ Auto low-stock alerts
+- ✅ Client-side PDF invoice generation
+- ✅ Fully responsive glassmorphic UI
 
 ---
 
