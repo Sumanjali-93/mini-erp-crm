@@ -1,6 +1,6 @@
 # Mini ERP + CRM Operations Portal
 
-A complete, responsive, full-stack ERP and CRM portal designed for wholesale/distribution operations. It is built using **Node.js, Express, React, CSS, and MySQL** in pure JavaScript (ES Modules).
+A complete, responsive, full-stack ERP and CRM portal designed for wholesale/distribution operations. It is built using **Node.js, Express, React, CSS, and MySQL**.
 
 ---
 
@@ -28,46 +28,6 @@ Ensure a local MySQL instance is installed and running on your system.
 1. Default connection parameters assume Host: `localhost` and Port: `3306`.
 2. The server will **automatically create** the database (`mini_erp_crm`), compile all required tables, and seed them with default role-based accounts and starting items upon startup. You do not need to pre-create the database.
 
----
-
-## Installation & Running Locally
-
-### Step 1: Clone or locate the project root
-Open your terminal and navigate to the project directory:
-```bash
-cd C:\Users\suman\.gemini\antigravity\scratch\mini-erp-crm
-```
-
-### Step 2: Set up Backend Environment variables
-Create or verify the `.env` file located in `backend/.env`:
-```env
-PORT=5000
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=password
-DB_NAME=mini_erp_crm
-JWT_SECRET=myawesomeerpkeythatshouldbechanged
-```
-*Modify the values to match your local MySQL username (`DB_USER`) and password (`DB_PASSWORD`).*
-
-### Step 3: Run the Backend Server
-Open a terminal in the `backend` directory and start the server:
-```bash
-cd backend
-npm run dev
-```
-*The server will boot on port `5000`.*
-
-### Step 4: Run the Frontend Client
-Open a new terminal in the `frontend` directory and start the Vite dev server:
-```bash
-cd frontend
-npm run dev
-```
-*The client will boot on port `3000` (automatically proxying `/api` requests to port `5000`)*
-
----
 
 ## Test Login Credentials
 
