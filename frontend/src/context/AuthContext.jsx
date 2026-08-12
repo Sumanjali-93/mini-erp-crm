@@ -9,16 +9,30 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const savedToken = localStorage.getItem('erp_token');
-    const savedUser = localStorage.getItem('erp_user');
-    
-    if (savedToken && savedUser) {
+ useEffect(() => {
+  const savedToken = localStorage.getItem('erp_token');
+  const savedUser = localStorage.getItem('erp_user');
+
+  try {
+    if (savedToken && savedUser && savedUser !== 'undefined') {
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
+    } else {
+      localStorage.removeItem('erp_token');
+      localStorage.removeItem('erp_user');
     }
+  } catch (err) {
+    console.error('Failed to restore authentication:', err);
+
+    localStorage.removeItem('erp_token');
+    localStorage.removeItem('erp_user');
+
+    setToken(null);
+    setUser(null);
+  } finally {
     setLoading(false);
-  }, []);
+  }
+}, []);
 
   const login = async (username, password) => {
     setError(null);
